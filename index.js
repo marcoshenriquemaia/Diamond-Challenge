@@ -5,33 +5,51 @@ const $box = document.querySelector("div");
 const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 const createLine = ({ letter }) => {
+  const fullLine = [];
   let indexLetter = null;
   let control = null;
-  const fullLine = [];
   let grow = false;
-  
+  let linha = "";
+
   [...alphabet].some((lett, indexAlphabet) => {
     if (lett === letter) {
       indexLetter = indexAlphabet;
       control = indexAlphabet;
-    };
+    }
   });
-  [... new Array((indexLetter * 2) + 1)].map(item =>{
-    [...new Array((indexLetter * 2) + 1)].map((item, indexLine) => {
-      control == indexLetter ? fullLine.push(alphabet[indexLine]) : fullLine.push(('_')); 
-      control == 0 && (grow = true);
-      if(!grow) {control--} else {control++};
+  [...new Array((indexLetter * 2) + 3)].map((item, indexLine) => {
+    fullLine.push(control + 1);
+    console.log(fullLine);
+    control < 0 && (grow = true);
+    if (grow) {
+      control++;
+    } else {
+      control--;
+    }
+  });
+  control = indexLetter - 1;
+  [...(new Array((indexLetter * 2) + 1))].map((item, indexLine) => {
+    fullLine.map(position => {
+      if (indexLine <= indexLetter) {
+        if (indexLine == position) {
+          linha = linha + alphabet[indexLine];
+        } else {
+          linha = linha + " _";
+        }
+      }
+      if (indexLine > indexLetter) {
+        if (position == control) {
+          linha = linha + alphabet[control];
+        }else {
+          linha = linha + " _";
+        };
+      }
     });
-
-    organizeLines({linha: fullLine.join('')});
-  })
-
+    if (indexLine > indexLetter) control--;
+    impress({ content: linha });
+    linha = "";
+  });
 };
-
-const organizeLines = ({linha}) =>{
-  impress({content: linha});
-
-}
 
 const impress = ({ content }) => {
   const span = document.createElement("span");
